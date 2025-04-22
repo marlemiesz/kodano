@@ -16,6 +16,8 @@ use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Serializer\Annotation\Groups;
 use Symfony\Component\Validator\Constraints as Assert;
+use App\Dto\ProductCategoriesLinkDto;
+use App\State\Processor\ProductCategoriesLinkProcessor;
 
 #[ORM\Entity(repositoryClass: ProductRepository::class)]
 #[ORM\HasLifecycleCallbacks]
@@ -28,6 +30,16 @@ use Symfony\Component\Validator\Constraints as Assert;
         new Post(
             denormalizationContext: ['groups' => ['product:write']],
             processor: ProductDataPersister::class
+        ),
+        new Post(
+            uriTemplate: '/products/{id}/link-categories',
+            normalizationContext: ['groups' => ['product_categories:read']],
+            denormalizationContext: ['groups' => ['product_categories:write']],
+            input: ProductCategoriesLinkDto::class,
+            output: ProductCategoriesLinkDto::class,
+            processor: ProductCategoriesLinkProcessor::class,
+            description: 'Links a product with selected categories',
+            name: 'link_categories'
         ),
         new Put(
             denormalizationContext: ['groups' => ['product:write']],

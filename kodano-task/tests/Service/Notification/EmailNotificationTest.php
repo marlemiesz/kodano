@@ -38,8 +38,6 @@ class EmailNotificationTest extends TestCase
 
     public function testSendEmailNotification(): void
     {
-        // Po przeanalizowaniu kodu wiemy, że logger.info jest wywoływany dwukrotnie
-        // Najpierw w AbstractNotification::send, a potem w EmailNotification::doSend
         $infoCallCount = 0;
         $this->logger->expects($this->exactly(2))
             ->method('info')
@@ -57,7 +55,6 @@ class EmailNotificationTest extends TestCase
         $this->mailer->expects($this->once())
             ->method('send')
             ->with($this->callback(function (Email $email) {
-                // Sprawdzamy zawartość emaila bez porównywania obiektów Address
                 $fromAddresses = $email->getFrom();
                 $toAddresses = $email->getTo();
                 
@@ -79,7 +76,6 @@ class EmailNotificationTest extends TestCase
 
     public function testSendEmailWithError(): void
     {
-        // Logger.info jest wywoływany raz w AbstractNotification::send
         $this->logger->expects($this->once())
             ->method('info')
             ->with($this->stringContains('notification about product "Test Product"'));
