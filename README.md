@@ -13,7 +13,7 @@ A Symfony 7 API application using API Platform for managing products and categor
 
 1. Clone the repository:
 ```
-git clone <repository-url>
+git clone https://github.com/marlemiesz/kodano
 ```
 
 2. Start the Docker containers:
