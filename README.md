@@ -37,9 +37,15 @@ php bin/console doctrine:schema:create
 php bin/console doctrine:fixtures:load --no-interaction
 ```
 
-## API Endpoints
+## API Documentation
 
-The API documentation is available at `/api/docs`.
+After installation, the API documentation is available at:
+
+**http://127.0.0.1:8000/api/docs**
+
+This Swagger UI interface allows you to browse and test all available endpoints.
+
+## API Endpoints
 
 ### Products
 
@@ -89,7 +95,6 @@ Run all tests:
 ```
 cd /var/www/kodano-task && ./vendor/bin/phpunit
 ```
-
 
 ## Project Structure
 
