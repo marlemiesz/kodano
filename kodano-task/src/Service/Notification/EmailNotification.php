@@ -4,6 +4,7 @@ namespace App\Service\Notification;
 
 use App\Entity\Product;
 use Psr\Log\LoggerInterface;
+use Symfony\Component\DependencyInjection\Attribute\Autowire;
 use Symfony\Component\Mailer\MailerInterface;
 use Symfony\Component\Mime\Email;
 
@@ -14,6 +15,7 @@ class EmailNotification extends AbstractNotification
     private string $toEmail;
 
     public function __construct(
+        #[Autowire(service: 'monolog.logger.notification')]
         LoggerInterface $logger,
         MailerInterface $mailer,
         string $fromEmail = 'noreply@example.com',
