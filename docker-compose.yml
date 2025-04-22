@@ -33,7 +33,7 @@ services:
     image: nginx:alpine
     container_name: symfony_nginx
     ports:
-      - "80:80"
+      - "8000:80"
     volumes:
       - ./kodano-task:/var/www/kodano-task
       - ./docker/nginx/conf.d:/etc/nginx/conf.d
