@@ -1,0 +1,19 @@
+---
+description:
+globs:
+alwaysApply: true
+---
+
+# Your rule content
+
+- You can @ files here
+- You can use markdown but dont have to
+
+- All code comments must be written in English
+- This applies to:
+  - Single-line comments (//)
+  - Multi-line comments (/* */)
+  - Documentation comments (/** */)
+  - Shell comments (#)
+- Comments should be clear, concise and professional
+- Avoid using non-English characters in comments

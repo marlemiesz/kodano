@@ -1,0 +1,48 @@
+# Struktura Aplikacji Kodano Task
+
+## Główne katalogi
+- `/kodano-task` - główny katalog aplikacji Symfony
+  - `/config` - pliki konfiguracyjne
+    - `/packages` - konfiguracja pakietów
+    - `/routes` - konfiguracja tras
+  - `/public` - pliki publiczne, punkt wejścia aplikacji
+  - `/src` - kod źródłowy aplikacji
+    - `/Controller` - kontrolery aplikacji
+    - `/Entity` - encje (modele) Doctrine
+    - `/Repository` - repozytoria Doctrine
+    - `/Service` - serwisy aplikacji
+    - `/ApiResource` - zasoby API Platform
+    - `/DataProvider` - dostawcy danych dla API Platform
+    - `/DataPersister` - persystery danych dla API Platform
+    - `/Dto` - obiekty transferu danych
+    - `/Validator` - walidatory
+  - `/tests` - testy aplikacji
+  - `/var` - pliki tymczasowe (cache, logi)
+  - `/vendor` - zależności composer
+
+## Docker
+- `/docker` - konfiguracja kontenerów
+  - `/php` - konfiguracja PHP
+  - `/nginx` - konfiguracja Nginx
+
+## Pliki konfiguracyjne
+- `docker-compose.yml` - konfiguracja środowiska Docker
+- `.env` - zmienne środowiskowe
+- `composer.json` - zależności PHP
+- `symfony.lock` - lock file Symfony
+- `composer.lock` - lock file Composer
+
+## Konwencje
+1. Nazwy klas powinny być w PascalCase
+2. Nazwy metod i zmiennych w camelCase
+3. Nazwy plików konfiguracyjnych w kebab-case
+4. Wszystkie komentarze w kodzie po angielsku
+5. Dokumentacja API w standardzie OpenAPI/Swagger
+
+## Środowisko
+- PHP 8.2
+- Symfony 7.2
+- API Platform 4.1
+- MySQL 8.0
+- Nginx
+- Docker 
