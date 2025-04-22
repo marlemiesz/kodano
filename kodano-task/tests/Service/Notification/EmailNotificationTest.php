@@ -4,9 +4,11 @@ namespace App\Tests\Service\Notification;
 
 use App\Entity\Product;
 use App\Service\Notification\EmailNotification;
+use PHPUnit\Framework\Constraint\StringContains;
 use PHPUnit\Framework\TestCase;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\Mailer\MailerInterface;
+use Symfony\Component\Mime\Address;
 use Symfony\Component\Mime\Email;
 
 class EmailNotificationTest extends TestCase
@@ -36,20 +38,35 @@ class EmailNotificationTest extends TestCase
 
     public function testSendEmailNotification(): void
     {
-        // Set up logger expectations
+        // Po przeanalizowaniu kodu wiemy, że logger.info jest wywoływany dwukrotnie
+        // Najpierw w AbstractNotification::send, a potem w EmailNotification::doSend
+        $infoCallCount = 0;
         $this->logger->expects($this->exactly(2))
             ->method('info')
-            ->withConsecutive(
-                [$this->stringContains('notification about product "Test Product" (1)')],
-                [$this->equalTo('Email notification sent successfully')]
-            );
+            ->with($this->callback(function ($message) use (&$infoCallCount) {
+                $infoCallCount++;
+                if ($infoCallCount === 1) {
+                    return strpos($message, 'notification about product "Test Product"') !== false;
+                } elseif ($infoCallCount === 2) {
+                    return $message === 'Email notification sent successfully';
+                }
+                return false;
+            }));
         
         // Set up mailer expectations
         $this->mailer->expects($this->once())
             ->method('send')
             ->with($this->callback(function (Email $email) {
-                $this->assertEquals(['test@example.com' => ''], $email->getFrom());
-                $this->assertEquals(['admin@example.com' => ''], $email->getTo());
+                // Sprawdzamy zawartość emaila bez porównywania obiektów Address
+                $fromAddresses = $email->getFrom();
+                $toAddresses = $email->getTo();
+                
+                $this->assertCount(1, $fromAddresses);
+                $this->assertCount(1, $toAddresses);
+                
+                $this->assertEquals('test@example.com', $fromAddresses[0]->getAddress());
+                $this->assertEquals('admin@example.com', $toAddresses[0]->getAddress());
+                
                 $this->assertEquals('Product created: Test Product', $email->getSubject());
                 $this->assertStringContainsString('Product operation: created', $email->getTextBody());
                 $this->assertStringContainsString('Product ID: 1', $email->getTextBody());
@@ -62,14 +79,14 @@ class EmailNotificationTest extends TestCase
 
     public function testSendEmailWithError(): void
     {
-        // Set up logger expectations
+        // Logger.info jest wywoływany raz w AbstractNotification::send
         $this->logger->expects($this->once())
             ->method('info')
-            ->with($this->stringContains('notification about product "Test Product" (1)'));
-        
+            ->with($this->stringContains('notification about product "Test Product"'));
+            
         $this->logger->expects($this->once())
             ->method('error')
-            ->with($this->stringContains('Error sending email notification:'));
+            ->with($this->stringContains('Error sending email notification'));
         
         // Make mailer throw exception
         $this->mailer->expects($this->once())

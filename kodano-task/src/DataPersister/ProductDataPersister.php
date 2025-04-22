@@ -2,6 +2,7 @@
 
 namespace App\DataPersister;
 
+use ApiPlatform\Metadata\DeleteOperationInterface;
 use ApiPlatform\Metadata\Operation;
 use ApiPlatform\State\ProcessorInterface;
 use App\Entity\Product;
@@ -24,6 +25,18 @@ class ProductDataPersister implements ProcessorInterface
     public function process($data, Operation $operation, array $uriVariables = [], array $context = [])
     {
         if (!$data instanceof Product) {
+            return $data;
+        }
+        
+        // Sprawdź czy to operacja usunięcia
+        if ($operation instanceof DeleteOperationInterface) {
+            // Powiadom o usunięciu produktu
+            $this->notificationManager->notify($data, 'deleted');
+            
+            // Usuń produkt
+            $this->entityManager->remove($data);
+            $this->entityManager->flush();
+            
             return $data;
         }
         
