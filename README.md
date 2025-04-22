@@ -7,16 +7,13 @@ A Symfony 7 API application using API Platform for managing products and categor
 - PHP 8.2+
 - MySQL 8.0
 - Composer
-- Docker and Docker Compose (optional)
+- Docker and Docker Compose
 
 ## Installation
-
-### Using Docker
 
 1. Clone the repository:
 ```
 git clone <repository-url>
-cd kodano-task
 ```
 
 2. Start the Docker containers:
@@ -35,32 +32,9 @@ composer install
 php bin/console doctrine:schema:create
 ```
 
-### Manual Installation
-
-1. Clone the repository:
+5. Load fixtures (sample data):
 ```
-git clone <repository-url>
-cd kodano-task
-```
-
-2. Install dependencies:
-```
-composer install
-```
-
-3. Configure the `.env` file with your database settings:
-```
-DATABASE_URL="mysql://app:app@127.0.0.1:3306/app?serverVersion=8.0&charset=utf8mb4"
-```
-
-4. Create database schema:
-```
-php bin/console doctrine:schema:create
-```
-
-5. Start the Symfony web server:
-```
-symfony serve
+php bin/console doctrine:fixtures:load --no-interaction
 ```
 
 ## API Endpoints
@@ -74,6 +48,7 @@ The API documentation is available at `/api/docs`.
 - `POST /api/products` - Create a new product
 - `PUT /api/products/{id}` - Update a product
 - `DELETE /api/products/{id}` - Delete a product
+- `POST /api/products/{id}/link-categories` - Link a product with categories
 
 ### Categories
 
@@ -96,6 +71,7 @@ The application implements a notification system that logs and sends emails when
 - Product creation
 - Product update
 - Product deletion
+- Product category linking
 
 Notifications are sent via:
 - Application logs
@@ -105,10 +81,15 @@ The system is designed to be easily extended with other notification types like 
 
 ## Testing
 
-Run tests with PHPUnit:
+### Running Unit Tests
+
+Inside the PHP container, run tests with PHPUnit:
+
+Run all tests:
 ```
-php bin/phpunit
+cd /var/www/kodano-task && ./vendor/bin/phpunit
 ```
+
 
 ## Project Structure
 
@@ -116,4 +97,6 @@ php bin/phpunit
 - `/src/Repository` - Doctrine repositories
 - `/src/DataPersister` - API Platform data persistence handlers
 - `/src/Service/Notification` - Notification services
+- `/src/State/Processor` - API Platform state processors
+- `/src/Dto` - Data Transfer Objects
 - `/tests` - PHPUnit tests 
