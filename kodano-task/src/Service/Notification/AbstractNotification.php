@@ -4,16 +4,13 @@ namespace App\Service\Notification;
 
 use App\Entity\Product;
 use Psr\Log\LoggerInterface;
-use Symfony\Component\DependencyInjection\Attribute\Autowire;
 
 abstract class AbstractNotification implements NotificationInterface
 {
     protected LoggerInterface $logger;
 
-    public function __construct(
-        #[Autowire(service: 'monolog.logger.notification')]
-        LoggerInterface $logger
-    ) {
+    public function __construct(LoggerInterface $logger)
+    {
         $this->logger = $logger;
     }
 

@@ -3,13 +3,12 @@
 namespace App\DataPersister;
 
 use ApiPlatform\Metadata\Operation;
-use ApiPlatform\Persistence\DataPersisterInterface;
 use ApiPlatform\State\ProcessorInterface;
 use App\Entity\Product;
 use App\Service\Notification\NotificationManager;
 use Doctrine\ORM\EntityManagerInterface;
 
-class ProductDataPersister implements DataPersisterInterface, ProcessorInterface
+class ProductDataPersister implements ProcessorInterface
 {
     private EntityManagerInterface $entityManager;
     private NotificationManager $notificationManager;
@@ -22,36 +21,12 @@ class ProductDataPersister implements DataPersisterInterface, ProcessorInterface
         $this->notificationManager = $notificationManager;
     }
 
-    public function supports($data, Operation $operation = null, array $context = []): bool
-    {
-        return $data instanceof Product;
-    }
-
-    public function persist($data, Operation $operation = null, array $context = [])
-    {
-        $isNew = $data->getId() === null;
-        
-        $this->entityManager->persist($data);
-        $this->entityManager->flush();
-        
-        $operationType = $isNew ? 'created' : 'updated';
-        $this->notificationManager->notify($data, $operationType);
-        
-        return $data;
-    }
-
-    public function remove($data, Operation $operation = null, array $context = [])
-    {
-        $this->entityManager->remove($data);
-        $this->entityManager->flush();
-        
-        $this->notificationManager->notify($data, 'deleted');
-        
-        return $data;
-    }
-
     public function process($data, Operation $operation, array $uriVariables = [], array $context = [])
     {
+        if (!$data instanceof Product) {
+            return $data;
+        }
+        
         $isNew = !$this->entityManager->contains($data);
         
         $this->entityManager->persist($data);

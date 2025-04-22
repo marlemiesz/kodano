@@ -23,8 +23,13 @@ services:
             - '../src/Kernel.php'
 
     # Notification services configuration
+    App\Service\Notification\LogNotification:
+        arguments:
+            $logger: '@monolog.logger.notification'
+
     App\Service\Notification\EmailNotification:
         arguments:
+            $logger: '@monolog.logger.notification'
             $fromEmail: '%app.notifications.email.from%'
             $toEmail: '%app.notifications.email.to%'
 

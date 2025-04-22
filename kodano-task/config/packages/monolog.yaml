@@ -11,22 +11,13 @@ when@dev:
                 path: "%kernel.logs_dir%/%kernel.environment%.log"
                 level: debug
                 channels: ["!event", "!notification"]
-            product_notification:
-                type: rotating_file
+            notification_handler:
+                type: stream
                 path: "%kernel.logs_dir%/product_notification.log"
-                level: info
-                max_files: 10
+                level: debug
                 channels: ["notification"]
                 formatter: monolog.formatter.line
-                date_format: "Y-m-d"
-            # uncomment to get logging in your browser
-            # you may have to allow bigger header sizes in your Web server configuration
-            #firephp:
-            #    type: firephp
-            #    level: info
-            #chromephp:
-            #    type: chromephp
-            #    level: info
+                include_stacktraces: true
             console:
                 type: console
                 process_psr_3_messages: false
@@ -60,7 +51,7 @@ when@prod:
                 path: php://stderr
                 level: debug
                 formatter: monolog.formatter.json
-            product_notification:
+            notification_handler:
                 type: stream
                 path: php://stderr
                 level: debug

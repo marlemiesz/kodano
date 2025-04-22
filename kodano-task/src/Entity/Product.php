@@ -9,6 +9,7 @@ use ApiPlatform\Metadata\GetCollection;
 use ApiPlatform\Metadata\Patch;
 use ApiPlatform\Metadata\Post;
 use ApiPlatform\Metadata\Put;
+use App\DataPersister\ProductDataPersister;
 use App\Repository\ProductRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
@@ -24,10 +25,21 @@ use Symfony\Component\Validator\Constraints as Assert;
     operations: [
         new Get(normalizationContext: ['groups' => ['product:read']]),
         new GetCollection(normalizationContext: ['groups' => ['product:read']]),
-        new Post(denormalizationContext: ['groups' => ['product:write']]),
-        new Put(denormalizationContext: ['groups' => ['product:write']]),
-        new Patch(denormalizationContext: ['groups' => ['product:write']]),
-        new Delete()
+        new Post(
+            denormalizationContext: ['groups' => ['product:write']],
+            processor: ProductDataPersister::class
+        ),
+        new Put(
+            denormalizationContext: ['groups' => ['product:write']],
+            processor: ProductDataPersister::class
+        ),
+        new Patch(
+            denormalizationContext: ['groups' => ['product:write']],
+            processor: ProductDataPersister::class
+        ),
+        new Delete(
+            processor: ProductDataPersister::class
+        )
     ]
 )]
 class Product
